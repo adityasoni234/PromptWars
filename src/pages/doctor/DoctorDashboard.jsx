@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Users, Calendar, AlertTriangle, TrendingUp, Clock, CheckCircle, ChevronRight, Video, MapPin, Activity } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DOCTOR_PATIENTS, APPOINTMENTS, DOCTOR_VITALS_CHART, DOCTOR_STATS } from '../../data/mockData';
@@ -29,6 +30,7 @@ const ChartTooltip = ({ active, payload, label }) => {
 
 export default function DoctorDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const todayAppts = APPOINTMENTS.filter(a => a.date === '2026-04-04');
 
   return (
@@ -98,11 +100,11 @@ export default function DoctorDashboard() {
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 14 }}>
             <h3>Today's Schedule</h3>
-            <span className="link" style={{ fontSize: 12, color: '#3b82f6', cursor: 'pointer' }}>View all</span>
+            <span onClick={() => navigate('/doctor/appointments')} className="link" style={{ fontSize: 12, color: '#3b82f6', cursor: 'pointer' }}>View all</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, overflowY: 'auto', maxHeight: 270 }}>
             {todayAppts.map(a => (
-              <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: a.status === 'urgent' ? '#fef2f2' : '#f8faff', border: `1px solid ${a.status === 'urgent' ? '#fee2e2' : '#e4eaf5'}`, cursor: 'pointer', transition: 'all 0.2s' }}
+              <div key={a.id} onClick={() => navigate('/doctor/appointments')} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 12, background: a.status === 'urgent' ? '#fef2f2' : '#f8faff', border: `1px solid ${a.status === 'urgent' ? '#fee2e2' : '#e4eaf5'}`, cursor: 'pointer', transition: 'all 0.2s' }}
                 onMouseEnter={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(15,23,42,0.08)'}
                 onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
                 <div style={{ textAlign: 'center', minWidth: 46 }}>
@@ -129,11 +131,11 @@ export default function DoctorDashboard() {
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 14 }}>
             <h3>Recent Patients</h3>
-            <span style={{ fontSize: 12, color: '#3b82f6', cursor: 'pointer' }}>See all →</span>
+            <span onClick={() => navigate('/doctor/patients')} style={{ fontSize: 12, color: '#3b82f6', cursor: 'pointer' }}>See all →</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {DOCTOR_PATIENTS.slice(0, 5).map((p, i) => (
-              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 0', borderBottom: i < 4 ? '1px solid #f1f5f9' : 'none', cursor: 'pointer', transition: 'all 0.15s' }}
+              <div key={p.id} onClick={() => navigate('/doctor/patients')} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 0', borderBottom: i < 4 ? '1px solid #f1f5f9' : 'none', cursor: 'pointer', transition: 'all 0.15s' }}
                 onMouseEnter={e => e.currentTarget.style.paddingLeft = '6px'}
                 onMouseLeave={e => e.currentTarget.style.paddingLeft = '0'}>
                 <div className="avatar avatar-sm avatar-blue">{p.avatar}</div>
@@ -172,7 +174,7 @@ export default function DoctorDashboard() {
               <span className="badge badge-red" style={{ marginLeft: 'auto' }}>Urgent</span>
             </div>
             {DOCTOR_PATIENTS.filter(p => p.status === 'critical' || p.risk === 'high').map(p => (
-              <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#fef2f2', borderRadius: 10, border: '1px solid #fee2e2', marginBottom: 8, cursor: 'pointer' }}>
+              <div key={p.id} onClick={() => navigate('/doctor/patients')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#fef2f2', borderRadius: 10, border: '1px solid #fee2e2', marginBottom: 8, cursor: 'pointer' }}>
                 <div className="avatar avatar-sm" style={{ background: '#ef4444' }}>{p.avatar}</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{p.name}</div>

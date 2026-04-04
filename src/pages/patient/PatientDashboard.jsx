@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Activity, Droplet, Thermometer, Wind, Zap, TrendingDown, Calendar, Pill, AlertOctagon, ChevronRight, CheckCircle } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { PATIENT_VITALS, PATIENT_APPOINTMENTS, PATIENT_MEDICATIONS, PATIENT_HEALTH_TREND } from '../../data/mockData';
@@ -16,6 +16,7 @@ const ChartTip = ({ active, payload, label }) => {
 
 export default function PatientDashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const nextAppt = PATIENT_APPOINTMENTS[0];
   const takenCount = PATIENT_MEDICATIONS.filter(m => m.taken).length;
 
@@ -39,7 +40,7 @@ export default function PatientDashboard() {
 
       {/* Next Appointment Banner */}
       {nextAppt && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', background: 'linear-gradient(135deg,#eff6ff,#f0fdf4)', border: '1px solid #dbeafe', borderRadius: 14, marginBottom: 22, cursor: 'pointer', transition: 'all 0.2s' }}
+        <div onClick={() => navigate('/patient/appointments')} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px', background: 'linear-gradient(135deg,#eff6ff,#f0fdf4)', border: '1px solid #dbeafe', borderRadius: 14, marginBottom: 22, cursor: 'pointer', transition: 'all 0.2s' }}
           onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(59,130,246,0.1)'}
           onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
           <div style={{ width: 44, height: 44, borderRadius: 12, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(15,23,42,0.06)' }}><Calendar size={20} color="#3b82f6" /></div>
@@ -82,7 +83,7 @@ export default function PatientDashboard() {
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 16 }}>
             <h3>Health Trend (7 Days)</h3>
-            <span style={{ fontSize: 12, color: '#10b981', display: 'flex', alignItems: 'center', gap: 4, fontWeight: 500 }}><TrendingDown size={13} /> Improving</span>
+            <span onClick={() => navigate('/patient/symptoms')} style={{ fontSize: 12, cursor: 'pointer', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4, fontWeight: 500 }}><TrendingDown size={13} /> Improving</span>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={PATIENT_HEALTH_TREND} margin={{ left: -24, bottom: 0 }}>
@@ -129,11 +130,11 @@ export default function PatientDashboard() {
             </div>
           ))}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 14 }}>
-            <div style={{ background: '#ecfdf5', border: '1px solid #d1fae5', borderRadius: 10, padding: '11px', textAlign: 'center', cursor: 'pointer' }}>
+            <div onClick={() => navigate('/patient/medications')} style={{ background: '#ecfdf5', border: '1px solid #d1fae5', borderRadius: 10, padding: '11px', textAlign: 'center', cursor: 'pointer' }}>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}><Pill size={18} color="#10b981" /></div>
               <div style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>Medications</div>
             </div>
-            <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: 10, padding: '11px', textAlign: 'center', cursor: 'pointer' }}>
+            <div onClick={() => navigate('/patient/sos')} style={{ background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: 10, padding: '11px', textAlign: 'center', cursor: 'pointer' }}>
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 6 }}><AlertOctagon size={18} color="#ef4444" /></div>
               <div style={{ fontSize: 11, color: '#ef4444', fontWeight: 600 }}>Emergency</div>
             </div>

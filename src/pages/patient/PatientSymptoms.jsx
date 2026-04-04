@@ -1,34 +1,17 @@
 import { useState } from 'react';
 import { SYMPTOMS_LIST } from '../../data/mockData';
-import { Brain, X, ChevronRight, AlertCircle } from 'lucide-react';
+import { Brain, X, ChevronRight, AlertCircle, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyDxPjAogGI8kRNgIRWryWZ9fmq4krN-LEI";
+const genAI = new GoogleGenerativeAI(apiKey);
 
 const TRIAGE = {
   low: { label: 'Low Risk', color: 'var(--accent-green)', bg: 'var(--accent-green-dim)', border: 'rgba(0,230,118,0.3)', advice: 'Your symptoms suggest a minor condition. Rest, hydrate well, and monitor for 24-48 hours. Visit a doctor if symptoms worsen.', emoji: '✅' },
   medium: { label: 'Moderate Risk', color: 'var(--accent-orange)', bg: 'var(--accent-orange-dim)', border: 'rgba(255,145,0,0.3)', advice: 'Your symptoms need medical attention within 24 hours. Book an appointment with your doctor today.', emoji: '⚠️' },
   high: { label: 'High Risk — Seek Urgent Care', color: 'var(--accent-red)', bg: 'var(--accent-red-dim)', border: 'rgba(255,71,87,0.3)', advice: 'Your symptoms may indicate a serious condition. Seek immediate medical attention or call emergency services.', emoji: '🚨' },
 };
-
-const URGENT = ['Chest Pain', 'Shortness of Breath', 'Palpitations', 'Blurred Vision'];
-const MEDIUM = ['Fever', 'Dizziness', 'Stomach Pain', 'Back Pain', 'Swelling', 'Joint Pain'];
-
-const AI_INSIGHTS = {
-  'Headache': 'Could be tension, dehydration, or eye strain. Try a dark quiet room and stay hydrated.',
-  'Fever': 'Temperature above 102°F warrants medical attention. Monitor every 4 hours and stay hydrated.',
-  'Chest Pain': '⚠️ Chest pain requires immediate evaluation to rule out cardiac causes.',
-  'Shortness of Breath': '⚠️ This symptom needs urgent evaluation. Call emergency if severe.',
-  'Fatigue': 'Persistent fatigue may indicate anemia, thyroid issues, or sleep disorder.',
-  'Cough': 'A cough lasting more than 3 weeks should be evaluated by a doctor.',
-  'Nausea': 'Could be food-related, viral infection or medication side effect. Sip water and rest.',
-  'Dizziness': 'May relate to blood pressure, dehydration or inner ear. Sit or lie down immediately.',
-  'Sore Throat': 'Rest your voice, gargle warm salt water. See a doctor if very painful or fever develops.',
-  'Anxiety': 'Practice deep breathing. Speak with a doctor if this is persistent or impacting daily life.',
-};
-
-function getLevel(symptoms) {
-  if (symptoms.some(s => URGENT.includes(s))) return 'high';
-  if (symptoms.some(s => MEDIUM.includes(s))) return 'medium';
-  return 'low';
-}
 
 export default function PatientSymptoms() {
   const [selected, setSelected] = useState([]);
@@ -37,6 +20,8 @@ export default function PatientSymptoms() {
   const [loading, setLoading] = useState(false);
   const [duration, setDuration] = useState('today');
   const [severity, setSeverity] = useState('moderate');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const toggle = (s) => setSelected(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]);
 
@@ -47,24 +32,57 @@ export default function PatientSymptoms() {
     }
   };
 
-  const analyze = () => {
+  const analyze = async () => {
     if (!selected.length) return;
     setLoading(true);
-    setTimeout(() => {
-      const level = getLevel(selected);
-      const insights = selected.map(s => ({ symptom: s, info: AI_INSIGHTS[s] || 'Monitor this symptom and consult your doctor if it persists beyond 48 hours.' }));
-      setResult({ level, insights });
+    setError('');
+    
+    try {
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.5-flash"
+      });
+      
+      const prompt = `You are an expert AI medical triage assistant.
+      The patient experiences the following symptoms: ${selected.join(', ')}. 
+      Duration: ${duration}. Severity: ${severity}.
+      
+      Analyze these symptoms and provide a logical response strictly in this exact JSON format. Only return raw JSON, no markdown formatting blocks:
+      {
+        "level": "low" | "medium" | "high",
+        "insights": [
+          { "symptom": "string", "info": "A short, 1-sentence medical explanation of what might be causing this specific symptom." }
+        ],
+        "recommended_reports": ["string", "string"] // Name 2-4 actual lab tests/reports the doctor might ask for (e.g., Complete Blood Count (CBC), ECG, X-Ray) based on their symptoms.
+      }`;
+
+      const response = await model.generateContent(prompt);
+      let rawText = response.response.text().trim();
+      if (rawText.startsWith('\`\`\`json')) rawText = rawText.substring(7);
+      if (rawText.startsWith('\`\`\`')) rawText = rawText.substring(3);
+      if (rawText.endsWith('\`\`\`')) rawText = rawText.substring(0, rawText.length - 3);
+
+      const data = JSON.parse(rawText);
+      
+      setResult({ 
+        level: data.level || "medium", 
+        insights: data.insights || [],
+        reports: data.recommended_reports || []
+      });
+    } catch (err) {
+      console.error(err);
+      setError("AI Analysis failed. Please try again or consult a doctor immediately.");
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
-  const reset = () => { setSelected([]); setResult(null); };
+  const reset = () => { setSelected([]); setResult(null); setError(''); };
 
   return (
     <div className="page-wrapper animate-fadeIn">
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>AI Symptom Checker</h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Select your symptoms for an AI-powered health triage</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Select your symptoms for a Gemini AI-powered health triage</p>
       </div>
 
       {!result ? (
@@ -123,14 +141,16 @@ export default function PatientSymptoms() {
             </div>
           )}
 
+          {error && <div style={{ color: 'var(--accent-red)', fontSize: 13, marginBottom: 16, background: 'var(--accent-red-dim)', padding: '12px 16px', borderRadius: 8 }}>{error}</div>}
+
           <button className="btn btn-primary" onClick={analyze} disabled={!selected.length || loading}
-            style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 15 }}>
+            style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 15, background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)', border: 'none' }}>
             {loading ? (
               <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ width: 18, height: 18, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.8s linear infinite', display: 'inline-block' }} />
-                Analyzing with AI...
+                Analyzing with Gemini...
               </span>
-            ) : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Brain size={18} /> Analyze Symptoms</span>}
+            ) : <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Brain size={18} /> Analyze with Gemini AI</span>}
           </button>
         </>
       ) : (
@@ -146,21 +166,49 @@ export default function PatientSymptoms() {
             )}
           </div>
 
-          <div className="card" style={{ padding: 24, marginBottom: 20 }}>
-            <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Brain size={18} color="var(--accent-purple)" /> AI Insights per Symptom
-            </h3>
-            {result.insights.map(s => (
-              <div key={s.symptom} style={{ padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
-                <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)', marginBottom: 5 }}>{s.symptom}</div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{s.info}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16, marginBottom: 20, alignItems: 'stretch' }}>
+            {/* Insights */}
+            <div className="card" style={{ padding: 24 }}>
+              <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Brain size={18} color="var(--accent-purple)" /> Triage Breakdown
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {result.insights.map((s, i) => (
+                  <div key={i}>
+                    <div style={{ fontWeight: 600, fontSize: 13, color: 'var(--text-primary)', marginBottom: 3 }}>{s.symptom}</div>
+                    <div style={{ fontSize: 12.5, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{s.info}</div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Recommended Reports */}
+            <div className="card" style={{ padding: 24, background: 'linear-gradient(to bottom right, #f8fafc, #f1f5f9)' }}>
+              <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8, color: '#0f172a' }}>
+                <FileText size={18} color="var(--accent-blue)" /> Recommended Lab Reports
+              </h3>
+              <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', marginBottom: 20 }}>Bring these to your doctor consultation to speed up diagnosis:</p>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {result.reports.length > 0 ? (
+                  result.reports.map((report, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#fff', padding: '12px 16px', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' }}>
+                      <div style={{ background: '#e0f2fe', width: 28, height: 28, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0369a1', fontWeight: 700, fontSize: 12 }}>
+                        {idx + 1}
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#334155' }}>{report}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>No specific reports recommended at this stage.</div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <button className="btn btn-ghost" onClick={reset} style={{ justifyContent: 'center', padding: 13 }}>← Check Again</button>
-            <button className="btn btn-primary" style={{ justifyContent: 'center', padding: 13 }}>
+            <button className="btn btn-primary" onClick={() => navigate('/patient/appointments')} style={{ justifyContent: 'center', padding: 13 }}>
               <ChevronRight size={16} /> Book Appointment
             </button>
           </div>
