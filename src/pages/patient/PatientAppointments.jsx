@@ -39,7 +39,7 @@ export default function PatientAppointments() {
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
                 <span className={`badge badge-${statusColor[a.status]}`}>{a.status}</span>
                 {a.mode === 'Video' && a.status === 'confirmed' && (
-                  <button className="btn btn-primary" style={{ padding: '6px 14px', fontSize: 12 }}><Video size={12} /> Join Call</button>
+                  <a href="https://meet.google.com/new" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '6px 14px', fontSize: 12, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}><Video size={12} /> Join Call</a>
                 )}
               </div>
             </div>

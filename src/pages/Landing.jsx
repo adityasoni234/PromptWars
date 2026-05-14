@@ -39,10 +39,7 @@ export default function Landing() {
         <div style={{ position: 'absolute', top: -60, right: '10%', width: 300, height: 300, background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -40, left: '5%', width: 250, height: 250, background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#eff6ff', border: '1px solid #dbeafe', borderRadius: 99, padding: '6px 14px', marginBottom: 24 }}>
-          <span style={{ fontSize: 14 }}>🏆</span>
-          <span style={{ fontSize: 13, color: '#3b82f6', fontWeight: 600 }}>PromptWars Ahmedabad 2026 · Google for Developers</span>
-        </div>
+
 
         <h1 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(40px,6vw,72px)', fontWeight: 900, color: '#0f172a', lineHeight: 1.1, marginBottom: 20, maxWidth: 800, margin: '0 auto 20px' }}>
           Healthcare That<br />
@@ -206,7 +203,7 @@ export default function Landing() {
           </div>
           <span style={{ fontWeight: 700, fontFamily: 'Outfit,sans-serif', color: '#fff', fontSize: 15 }}>MediSync Pro</span>
         </div>
-        <p style={{ color: '#475569', fontSize: 13 }}>Built with ❤️ for PromptWars Ahmedabad 2026 · Google for Developers × H2S</p>
+        <p style={{ color: '#475569', fontSize: 13 }}>Built by Aditya Soni</p>
       </footer>
 
       <style>{`

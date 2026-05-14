@@ -1,13 +1,16 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Heart, LayoutDashboard, Calendar, Pill, Activity, AlertOctagon, LogOut, Bell, User, X } from 'lucide-react';
+import { Heart, LayoutDashboard, Calendar, Pill, Activity, AlertOctagon, LogOut, Bell, User, X, MessageSquare, FileText, Search } from 'lucide-react';
 import { useState } from 'react';
 
 const NAV = [
   { to: '/patient', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/patient/appointments', label: 'Appointments', icon: Calendar },
+  { to: '/patient/doctors', label: 'Find Doctors', icon: Search },
+  { to: '/patient/appointments', label: 'Appointments', icon: Calendar, badge: '2', badgeClass: 'purple' },
   { to: '/patient/medications', label: 'Medications', icon: Pill },
   { to: '/patient/symptoms', label: 'Symptom Check', icon: Activity },
+  { to: '/patient/chat', label: 'AI Health Chat', icon: MessageSquare },
+  { to: '/patient/documents', label: 'My Documents', icon: FileText },
   { to: '/patient/sos', label: 'Emergency SOS', icon: AlertOctagon, isEmergency: true },
 ];
 

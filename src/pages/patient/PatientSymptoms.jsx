@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { SYMPTOMS_LIST } from '../../data/mockData';
+import { SYMPTOMS_LIST, PATIENT_SYMPTOM_LOGS } from '../../data/mockData';
 import { Brain, X, ChevronRight, AlertCircle, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyDxPjAogGI8kRNgIRWryWZ9fmq4krN-LEI";
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "AIzaSyDqkoQ0-hc9l86v4vUFwWV3i24KcTD4aGw";
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const TRIAGE = {
@@ -39,7 +39,10 @@ export default function PatientSymptoms() {
     
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash"
+        model: "gemini-2.5-flash",
+        generationConfig: {
+          responseMimeType: "application/json",
+        }
       });
       
       const prompt = `You are an expert AI medical triage assistant.
@@ -62,6 +65,13 @@ export default function PatientSymptoms() {
       if (rawText.endsWith('\`\`\`')) rawText = rawText.substring(0, rawText.length - 3);
 
       const data = JSON.parse(rawText);
+      
+      // SYNC WITH DOCTOR!
+      PATIENT_SYMPTOM_LOGS.unshift({
+        id: Date.now(), patientId: 99, patientName: 'Current User',
+        date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+        symptoms: selected.join(', '), aiDiagnosis: rawText, severity: data.level
+      });
       
       setResult({ 
         level: data.level || "medium", 

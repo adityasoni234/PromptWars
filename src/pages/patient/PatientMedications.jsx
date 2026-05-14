@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PATIENT_MEDICATIONS } from '../../data/mockData';
-import { CheckCircle, Clock, AlertCircle, RefreshCw } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, RefreshCw, Pill, MapPin } from 'lucide-react';
 
 export default function PatientMedications() {
   const [meds, setMeds] = useState(PATIENT_MEDICATIONS);
@@ -11,14 +11,14 @@ export default function PatientMedications() {
   return (
     <div className="page-wrapper animate-fadeIn">
       <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>Medications</h2>
+        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Medications</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Track your daily medication schedule</p>
       </div>
 
       {/* Progress Banner */}
       <div style={{ background: 'linear-gradient(135deg, rgba(0,230,118,0.08) 0%, rgba(29,233,182,0.05) 100%)', border: '1px solid rgba(0,230,118,0.2)', borderRadius: 'var(--radius-lg)', padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: 'Outfit,sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--accent-green)' }}>{taken}/{meds.length}</div>
+          <div style={{ fontFamily: 'Outfit,sans-serif', fontSize: 40, fontWeight: 900, color: 'var(--green)' }}>{taken}/{meds.length}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>taken today</div>
         </div>
         <div style={{ flex: 1 }}>
@@ -42,24 +42,48 @@ export default function PatientMedications() {
             <div key={m.id} style={{
               display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px',
               borderRadius: 'var(--radius-md)', transition: 'var(--transition)',
-              background: m.taken ? 'var(--accent-green-dim)' : 'var(--bg-secondary)',
-              border: `1px solid ${m.taken ? 'rgba(0,230,118,0.2)' : 'var(--border)'}`,
+              background: m.taken ? 'var(--green-light)' : 'var(--bg-input)',
+              border: `1px solid ${m.taken ? 'rgba(16,185,129,0.2)' : 'var(--border)'}`,
             }}>
-              <div style={{ fontSize: 28, lineHeight: 1 }}>{m.icon}</div>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: m.taken ? 'rgba(16,185,129,0.1)' : 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: m.taken ? 'var(--green)' : 'var(--blue)', flexShrink: 0 }}>
+                <Pill size={24} />
+              </div>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)' }}>{m.name}</span>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{m.name}</span>
                   <span className="badge badge-blue">{m.dose}</span>
                   <span style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 4 }}>{m.purpose}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 16, marginTop: 6 }}>
+                <div style={{ display: 'flex', gap: 16, marginTop: 6, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={11} /> {m.time}</span>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>📅 Refill due: {m.refillDue}</span>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>🔁 {m.frequency}</span>
+                  <span style={{ fontSize: 12, color: m.stock <= 5 ? 'var(--red)' : 'var(--text-muted)', fontWeight: m.stock <= 5 ? 700 : 500 }}>
+                    📦 {m.stock} / {m.totalPrescribed} pills left
+                  </span>
+                </div>
+                
+                {m.stock <= 5 && (
+                  <div style={{ marginTop: 8, padding: '8px 12px', background: 'var(--red-light)', border: '1px solid var(--red-mid)', borderRadius: 8, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <AlertCircle size={14} color="var(--red)" />
+                    <span style={{ fontSize: 12, color: 'var(--red-dark)', fontWeight: 600 }}>Running low! Order prescribed refill immediately.</span>
+                  </div>
+                )}
+
+                <div style={{ marginTop: 10 }}>
+                  {m.stock <= 5 ? (
+                    <a href={`https://www.google.com/maps/search/pharmacy+near+me+ordering+${encodeURIComponent(m.name)}`} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '6px 12px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: 'var(--red)', border: 'none', boxShadow: 'var(--shadow-red)' }}>
+                      <RefreshCw size={12} /> Refill Prescribed Dose Now
+                    </a>
+                  ) : (
+                    <a href={`https://www.google.com/maps/search/pharmacy+near+me+ordering+${encodeURIComponent(m.name)}`} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12, color: 'var(--text-secondary)', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
+                      <MapPin size={12} color="var(--blue)" /> Order Near By
+                    </a>
+                  )}
                 </div>
               </div>
               <button onClick={() => toggleTaken(m.id)} className={`med-check ${m.taken ? 'taken' : ''}`}
-                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${m.taken ? 'var(--accent-green)' : 'var(--border-light)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: m.taken ? 'var(--accent-green)' : 'transparent', transition: 'var(--transition)' }}>
+                style={{ width: 36, height: 36, borderRadius: '50%', border: `2px solid ${m.taken ? 'var(--green)' : 'var(--border)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: m.taken ? 'var(--green)' : 'transparent', transition: 'var(--transition)' }}>
                 {m.taken ? <CheckCircle size={18} color="#000" /> : <CheckCircle size={18} color="var(--text-muted)" />}
               </button>
             </div>
@@ -70,7 +94,7 @@ export default function PatientMedications() {
       {/* Refill Alerts */}
       <div className="card" style={{ padding: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <AlertCircle size={16} color="var(--accent-orange)" />
+          <AlertCircle size={16} color="var(--amber)" />
           <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700 }}>Refill Reminders</h3>
         </div>
         {meds.filter(m => {
@@ -80,16 +104,18 @@ export default function PatientMedications() {
           const days = Math.floor((new Date(m.refillDue) - new Date()) / (1000 * 60 * 60 * 24));
           return (
             <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
-              <span style={{ fontSize: 20 }}>{m.icon}</span>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(59,130,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--blue)', flexShrink: 0 }}>
+                <Pill size={18} />
+              </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{m.name} {m.dose}</div>
-                <div style={{ fontSize: 11, color: days <= 7 ? 'var(--accent-red)' : 'var(--accent-orange)' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>{m.name} {m.dose}</div>
+                <div style={{ fontSize: 11, color: days <= 7 ? 'var(--red)' : 'var(--amber)' }}>
                   Refill due in {days} day{days !== 1 ? 's' : ''} ({m.refillDue})
                 </div>
               </div>
-              <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <a href={`https://www.google.com/maps/search/pharmacy+near+me+ordering+${encodeURIComponent(m.name)}`} target="_blank" rel="noreferrer" className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
                 <RefreshCw size={12} /> Refill
-              </button>
+              </a>
             </div>
           );
         })}

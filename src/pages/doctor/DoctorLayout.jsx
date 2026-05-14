@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Heart, LayoutDashboard, Users, Calendar, BarChart2, MessageSquare, LogOut, Bell, Stethoscope, Settings, X } from 'lucide-react';
+import { Heart, LayoutDashboard, Users, Calendar, BarChart2, MessageSquare, LogOut, Bell, Stethoscope, Settings, X, UserCog } from 'lucide-react';
 import { useState } from 'react';
 import { NOTIFICATIONS } from '../../data/mockData';
 
@@ -10,6 +10,7 @@ const NAV = [
   { to: '/doctor/appointments', label: 'Appointments', icon: Calendar, badge: '8', badgeClass: 'green' },
   { to: '/doctor/analytics', label: 'Analytics', icon: BarChart2 },
   { to: '/doctor/messages', label: 'Messages', icon: MessageSquare, badge: '3' },
+  { to: '/doctor/staff', label: 'Staff Management', icon: UserCog },
 ];
 
 export default function DoctorLayout() {

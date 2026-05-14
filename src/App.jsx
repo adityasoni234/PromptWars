@@ -9,12 +9,16 @@ import DoctorPatients from './pages/doctor/DoctorPatients';
 import DoctorAppointments from './pages/doctor/DoctorAppointments';
 import DoctorAnalytics from './pages/doctor/DoctorAnalytics';
 import DoctorMessages from './pages/doctor/DoctorMessages';
+import DoctorStaff from './pages/doctor/DoctorStaff';
 import PatientLayout from './pages/patient/PatientLayout';
 import PatientDashboard from './pages/patient/PatientDashboard';
 import PatientAppointments from './pages/patient/PatientAppointments';
 import PatientMedications from './pages/patient/PatientMedications';
 import PatientSymptoms from './pages/patient/PatientSymptoms';
 import PatientSOS from './pages/patient/PatientSOS';
+import PatientChatbot from './pages/patient/PatientChatbot';
+import PatientDocuments from './pages/patient/PatientDocuments';
+import PatientDoctors from './pages/patient/PatientDoctors';
 
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
@@ -39,14 +43,18 @@ function AppRoutes() {
         <Route path="appointments" element={<DoctorAppointments />} />
         <Route path="analytics" element={<DoctorAnalytics />} />
         <Route path="messages" element={<DoctorMessages />} />
+        <Route path="staff" element={<DoctorStaff />} />
       </Route>
 
       {/* Patient Routes */}
       <Route path="/patient" element={<ProtectedRoute role="patient"><PatientLayout /></ProtectedRoute>}>
         <Route index element={<PatientDashboard />} />
+        <Route path="doctors" element={<PatientDoctors />} />
         <Route path="appointments" element={<PatientAppointments />} />
         <Route path="medications" element={<PatientMedications />} />
         <Route path="symptoms" element={<PatientSymptoms />} />
+        <Route path="chat" element={<PatientChatbot />} />
+        <Route path="documents" element={<PatientDocuments />} />
         <Route path="sos" element={<PatientSOS />} />
       </Route>
 

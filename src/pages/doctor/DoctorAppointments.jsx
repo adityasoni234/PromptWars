@@ -79,6 +79,16 @@ export default function DoctorAppointments() {
                       </span>
                       <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>📝 {a.notes}</span>
                     </div>
+                    <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                      {a.mode === 'Video' && (
+                        <a href="https://meet.google.com/new" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '6px 12px', fontSize: 11, textDecoration: 'none' }} onClick={(e) => e.stopPropagation()}>
+                          <Video size={12} /> Join Meet
+                        </a>
+                      )}
+                      <button className="btn btn-ghost" style={{ padding: '6px 12px', fontSize: 11, background: '#fff' }} onClick={(e) => { e.stopPropagation(); window.alert(`Follow-up manually requested for ${a.patientName}`); }}>
+                        Req Follow Up
+                      </button>
+                    </div>
                   </div>
                   <span className={`badge badge-${statusCol[a.status]}`} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: 4 }}>
                     {statusIcon[a.status]} {a.status}

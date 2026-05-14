@@ -39,10 +39,10 @@ export const PATIENT_VITALS = {
 };
 
 export const PATIENT_MEDICATIONS = [
-  { id: 1, name: 'Amlodipine', dose: '5mg', frequency: 'Once daily', time: 'Morning', icon: '💊', taken: true, refillDue: '2026-04-15', purpose: 'Blood Pressure' },
-  { id: 2, name: 'Metformin', dose: '500mg', frequency: 'Twice daily', time: 'Morning & Night', icon: '🔵', taken: false, refillDue: '2026-04-20', purpose: 'Blood Sugar' },
-  { id: 3, name: 'Vitamin D3', dose: '2000 IU', frequency: 'Once daily', time: 'Afternoon', icon: '🟡', taken: true, refillDue: '2026-05-01', purpose: 'Supplement' },
-  { id: 4, name: 'Lisinopril', dose: '10mg', frequency: 'Once daily', time: 'Night', icon: '🟢', taken: false, refillDue: '2026-04-18', purpose: 'Heart Health' },
+  { id: 1, name: 'Amlodipine', dose: '5mg', frequency: 'Once daily', time: 'Morning', icon: '💊', taken: true, refillDue: '2026-04-15', purpose: 'Blood Pressure', stock: 4, totalPrescribed: 30 },
+  { id: 2, name: 'Metformin', dose: '500mg', frequency: 'Twice daily', time: 'Morning & Night', icon: '🔵', taken: false, refillDue: '2026-04-20', purpose: 'Blood Sugar', stock: 15, totalPrescribed: 60 },
+  { id: 3, name: 'Vitamin D3', dose: '2000 IU', frequency: 'Once daily', time: 'Afternoon', icon: '🟡', taken: true, refillDue: '2026-05-01', purpose: 'Supplement', stock: 24, totalPrescribed: 30 },
+  { id: 4, name: 'Lisinopril', dose: '10mg', frequency: 'Once daily', time: 'Night', icon: '🟢', taken: false, refillDue: '2026-04-18', purpose: 'Heart Health', stock: 2, totalPrescribed: 30 },
 ];
 
 export const PATIENT_APPOINTMENTS = [
@@ -89,4 +89,8 @@ export const NOTIFICATIONS = [
   { id: 2, type: 'appointment', text: 'Appointment with Rahul Verma in 30 minutes', time: '10 min ago', read: false },
   { id: 3, type: 'lab', text: 'Lab results ready for Kavitha Nair', time: '1 hr ago', read: false },
   { id: 4, type: 'message', text: 'New message from Priya Mehta', time: '2 hr ago', read: true },
+];
+
+export const PATIENT_SYMPTOM_LOGS = [
+  { id: 1, patientId: 1, patientName: 'Priya Mehta', date: '2026-04-03', time: '08:30 AM', symptoms: 'Dizziness, mild nausea', aiDiagnosis: 'Possible side effect of new BP medication. Monitor hydration. Routine doctor checkup recommended.', severity: 'Medium' }
 ];
