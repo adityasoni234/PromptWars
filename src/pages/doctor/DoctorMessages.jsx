@@ -27,12 +27,24 @@ export default function DoctorMessages() {
 
   return (
     <div className="page-wrapper animate-fadeIn" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
+      <style>{`
+        .dm-chat-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; flex: 1; overflow: hidden; }
+        @media (max-width: 900px) {
+          .dm-chat-grid { grid-template-columns: 200px 1fr; gap: 12px; }
+        }
+        @media (max-width: 640px) {
+          .dm-chat-grid { grid-template-columns: 1fr; }
+          .dm-patient-list { display: none; }
+          .dm-chat-grid.show-list .dm-patient-list { display: flex; }
+          .dm-chat-grid.show-list .dm-chat-area { display: none; }
+        }
+      `}</style>
       <div style={{ marginBottom: 16 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Messages</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Secure patient communication and triage escalations</p>
       </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 20, flex: 1, overflow: 'hidden' }}>
+      <div className="dm-chat-grid">
         {/* Patient List (Left Sidebar) */}
         <div className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '16px', borderBottom: '1px solid var(--border)' }}>

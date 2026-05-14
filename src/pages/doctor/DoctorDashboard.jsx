@@ -35,9 +35,25 @@ export default function DoctorDashboard() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
+      <style>{`
+        .dd-main-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .dd-bot-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .dd-vitals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+        .dd-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+        @media (max-width: 900px) {
+          .dd-main-grid { grid-template-columns: 1fr; }
+          .dd-bot-grid  { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+          .dd-vitals-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 420px) {
+          .dd-vitals-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
       {/* Greeting */}
       <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 26, fontWeight: 800, color: '#0f172a' }}>
+        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(20px,4vw,26px)', fontWeight: 800, color: '#0f172a' }}>
           Good morning, <span style={{ background: 'linear-gradient(135deg,#3b82f6,#6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{user?.name?.split(' ').slice(1).join(' ') || 'Doctor'}</span> 👋
         </h2>
         <p style={{ color: '#94a3b8', fontSize: 14, marginTop: 4 }}>Here's what's happening with your patients today, April 04, 2026.</p>
@@ -62,7 +78,7 @@ export default function DoctorDashboard() {
       </div>
 
       {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 16, marginBottom: 16 }}>
+      <div className="dd-main-grid">
         {/* Vitals Chart */}
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>
@@ -126,7 +142,7 @@ export default function DoctorDashboard() {
       </div>
 
       {/* Bottom */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div className="dd-bot-grid">
         {/* Patient List */}
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 14 }}>

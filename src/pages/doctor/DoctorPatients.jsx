@@ -65,7 +65,18 @@ export default function DoctorPatients() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <style>{`
+        .dpt-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .dpt-filters { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .dpt-filter-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+        .dpt-panel-grid { display: grid; gap: 20px; }
+        @media (max-width: 900px) { .dpt-panel-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 640px) {
+          .dpt-header h2 { font-size: 20px; }
+          .dpt-search { width: 100% !important; }
+        }
+      `}</style>
+      <div className="dpt-header">
         <div>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Patients</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>{patientsList.length} total patients under your care</p>
@@ -102,7 +113,7 @@ export default function DoctorPatients() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 360px' : '1fr', gap: 20 }}>
+      <div className="dpt-panel-grid" style={{ gridTemplateColumns: selected ? '1fr 360px' : '1fr' }}>
         {/* Table */}
         <div className="card" style={{ overflow: 'hidden', padding: 0 }}>
           <div style={{ overflowX: 'auto' }}>

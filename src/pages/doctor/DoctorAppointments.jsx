@@ -15,7 +15,13 @@ export default function DoctorAppointments() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
-      <div style={{ marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <style>{`
+        .da-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .da-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+        @media (max-width: 900px) { .da-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .da-header h2 { font-size: 20px; } }
+      `}</style>
+      <div className="da-header">
         <div>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>Appointments</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>{APPOINTMENTS.length} total scheduled</p>
@@ -42,7 +48,7 @@ export default function DoctorAppointments() {
         })}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 20 }}>
+      <div className="da-grid">
         {/* Appointment List */}
         <div className="card" style={{ padding: 24 }}>
           <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 20, color: 'var(--text-primary)' }}>

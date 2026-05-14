@@ -38,8 +38,8 @@ export default function Register() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: 'Inter,sans-serif' }}>
-      {/* Left */}
-      <div style={{ flex: '0 0 380px', background: 'linear-gradient(160deg, #0f172a 0%, #1e3a5f 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 48, position: 'relative', overflow: 'hidden' }}>
+      {/* Left Panel */}
+      <div className="register-left-panel" style={{ flex: '0 0 340px', background: 'linear-gradient(160deg, #0f172a 0%, #1e3a5f 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -80, right: -80, width: 280, height: 280, background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 48 }}>
@@ -48,10 +48,8 @@ export default function Register() {
             </div>
             <span style={{ fontFamily: 'Outfit,sans-serif', fontSize: 18, fontWeight: 800, color: '#fff' }}>MediSync Pro</span>
           </div>
-          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 34, fontWeight: 900, color: '#fff', lineHeight: 1.15, marginBottom: 14 }}>Join the future of care.</h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.7, marginBottom: 40 }}>Create your account in less than 2 minutes and start transforming your healthcare experience.</p>
-
-          {/* Steps */}
+          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 30, fontWeight: 900, color: '#fff', lineHeight: 1.15, marginBottom: 14 }}>Join the future of care.</h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, lineHeight: 1.7, marginBottom: 40 }}>Create your account in less than 2 minutes.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {['Choose your role', 'Fill in your details', 'Access your dashboard'].map((s, i) => (
               <div key={s} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -65,11 +63,26 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Right */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 40px', background: '#fff', overflowY: 'auto', position: 'relative' }}>
-        <Link to="/" style={{ position: 'absolute', top: 24, left: 28, display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 13, textDecoration: 'none' }}>
+      {/* Right Panel */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', background: '#fff', overflowY: 'auto', position: 'relative' }}>
+        <Link to="/" style={{ position: 'absolute', top: 20, left: 20, display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 13, textDecoration: 'none' }}>
           <ArrowLeft size={15} /> Home
         </Link>
+
+        {/* Mobile logo */}
+        <div className="register-mobile-logo" style={{ display: 'none', alignItems: 'center', gap: 8, marginBottom: 24, marginTop: 16 }}>
+          <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Heart size={16} color="#fff" fill="#fff" />
+          </div>
+          <span style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 800, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MediSync Pro</span>
+        </div>
+
+        {/* Mobile step indicator */}
+        <div className="register-mobile-steps" style={{ display: 'none', gap: 8, marginBottom: 20, width: '100%', maxWidth: 460 }}>
+          {[1, 2, 3].map(s => (
+            <div key={s} style={{ flex: 1, height: 4, borderRadius: 99, background: s <= step ? '#3b82f6' : '#e4eaf5', transition: 'background 0.3s' }} />
+          ))}
+        </div>
 
         <div style={{ width: '100%', maxWidth: 460 }}>
           {step === 1 ? (
@@ -84,10 +97,10 @@ export default function Register() {
                   { r: 'patient', icon: <User size={28} />, title: "I'm a Patient", desc: 'Book appointments, track medications & monitor your health', color: '#10b981', bg: '#ecfdf5', border: '#d1fae5' },
                 ].map(item => (
                   <button key={item.r} onClick={() => { setRole(item.r); setStep(2); }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '20px', background: '#fff', border: '2px solid #e4eaf5', borderRadius: 16, cursor: 'pointer', textAlign: 'left', width: '100%', transition: 'all 0.2s' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = item.color; e.currentTarget.style.background = item.bg; e.currentTarget.style.transform = 'translateX(3px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e4eaf5'; e.currentTarget.style.background = '#fff'; e.currentTarget.style.transform = 'none'; }}>
-                    <div style={{ width: 56, height: 56, borderRadius: 14, background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color, flexShrink: 0 }}>{item.icon}</div>
+                    style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '18px 20px', background: '#fff', border: '2px solid #e4eaf5', borderRadius: 16, cursor: 'pointer', textAlign: 'left', width: '100%', transition: 'all 0.2s' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = item.color; e.currentTarget.style.background = item.bg; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e4eaf5'; e.currentTarget.style.background = '#fff'; }}>
+                    <div style={{ width: 52, height: 52, borderRadius: 14, background: item.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.color, flexShrink: 0 }}>{item.icon}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>{item.title}</div>
                       <div style={{ fontSize: 13, color: '#475569', lineHeight: 1.4 }}>{item.desc}</div>
@@ -117,7 +130,8 @@ export default function Register() {
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div className="form-group"><label className="form-label">Full Name *</label><input className="form-input" placeholder={role === 'doctor' ? 'Dr. Your Name' : 'Your Full Name'} value={form.name} onChange={e => set('name', e.target.value)} /></div>
                 <div className="form-group"><label className="form-label">Email Address *</label><input className="form-input" type="email" placeholder="you@example.com" value={form.email} onChange={e => set('email', e.target.value)} /></div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+
+                <div className="register-pw-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Password *</label>
                     <div style={{ position: 'relative' }}>
@@ -127,18 +141,19 @@ export default function Register() {
                   </div>
                   <div className="form-group"><label className="form-label">Confirm Password *</label><input className="form-input" type="password" placeholder="Repeat" value={form.confirm} onChange={e => set('confirm', e.target.value)} /></div>
                 </div>
+
                 <div className="form-group"><label className="form-label">Phone Number</label><input className="form-input" placeholder="+91 99999 99999" value={form.phone} onChange={e => set('phone', e.target.value)} /></div>
 
                 {role === 'doctor' ? (
                   <>
                     <div className="form-group"><label className="form-label">Specialization</label><select className="form-input form-select" value={form.specialization} onChange={e => set('specialization', e.target.value)}><option value="">Select specialization</option>{specs.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    <div className="register-pw-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                       <div className="form-group"><label className="form-label">Hospital / Clinic</label><input className="form-input" placeholder="Hospital name" value={form.hospital} onChange={e => set('hospital', e.target.value)} /></div>
                       <div className="form-group"><label className="form-label">Experience</label><input className="form-input" placeholder="e.g. 5 years" value={form.experience} onChange={e => set('experience', e.target.value)} /></div>
                     </div>
                   </>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div className="register-pw-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                     <div className="form-group"><label className="form-label">Age</label><input className="form-input" type="number" placeholder="Your age" value={form.age} onChange={e => set('age', e.target.value)} /></div>
                     <div className="form-group"><label className="form-label">Blood Group</label><select className="form-input form-select" value={form.bloodGroup} onChange={e => set('bloodGroup', e.target.value)}><option value="">Select</option>{bloods.map(b => <option key={b} value={b}>{b}</option>)}</select></div>
                   </div>
@@ -153,6 +168,15 @@ export default function Register() {
           )}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .register-left-panel { display: none !important; }
+          .register-mobile-logo { display: flex !important; }
+          .register-mobile-steps { display: flex !important; }
+          .register-pw-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

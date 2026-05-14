@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Shield, Zap, Users, MessageSquare, Activity, ArrowRight, CheckCircle, Star, Stethoscope } from 'lucide-react';
+import { Heart, Shield, Zap, Users, MessageSquare, Activity, ArrowRight, CheckCircle, Stethoscope, X, Menu } from 'lucide-react';
 
 const features = [
   { icon: <Activity size={22} />, color: '#3b82f6', bg: '#eff6ff', title: 'Real-time Vitals', desc: 'Monitor patient vitals live with AI-powered anomaly detection and instant health alerts.' },
@@ -12,45 +13,70 @@ const features = [
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh', fontFamily: 'Inter, sans-serif' }}>
       {/* ── Navbar ── */}
-      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid #e4eaf5', padding: '0 5%' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+      <nav style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(16px)', borderBottom: '1px solid #e4eaf5' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+          {/* Logo */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(59,130,246,0.25)' }}>
+            <div style={{ width: 36, height: 36, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(59,130,246,0.25)', flexShrink: 0 }}>
               <Heart size={18} color="#fff" fill="#fff" />
             </div>
             <span style={{ fontFamily: 'Outfit,sans-serif', fontSize: 18, fontWeight: 800, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MediSync Pro</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+
+          {/* Desktop Nav */}
+          <div className="landing-nav-links" style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <a href="#features" style={{ color: '#475569', fontSize: 14, textDecoration: 'none', fontWeight: 500 }}>Features</a>
             <a href="#how" style={{ color: '#475569', fontSize: 14, textDecoration: 'none', fontWeight: 500 }}>How it works</a>
             <Link to="/login" style={{ color: '#3b82f6', fontSize: 14, textDecoration: 'none', fontWeight: 600 }}>Log in</Link>
             <Link to="/register" className="btn btn-primary" style={{ padding: '8px 20px', borderRadius: 10 }}>Get Started</Link>
           </div>
+
+          {/* Mobile Hamburger */}
+          <button className="landing-hamburger" onClick={() => setMenuOpen(true)}
+            style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, borderRadius: 8, background: '#f0f4ff', border: '1px solid #e4eaf5', cursor: 'pointer', color: '#475569' }}>
+            <Menu size={20} />
+          </button>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {menuOpen && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setMenuOpen(false)}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: 'min(280px, 85vw)', height: '100vh', background: '#fff', boxShadow: '-8px 0 32px rgba(15,23,42,0.15)', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 8 }} onClick={e => e.stopPropagation()}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <span style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 800, fontSize: 16, color: '#0f172a' }}>Menu</span>
+                <button onClick={() => setMenuOpen(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: 8, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#475569' }}><X size={16} /></button>
+              </div>
+              {[['#features', 'Features'], ['#how', 'How it works']].map(([href, label]) => (
+                <a key={href} href={href} onClick={() => setMenuOpen(false)}
+                  style={{ color: '#475569', fontSize: 15, textDecoration: 'none', fontWeight: 500, padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>{label}</a>
+              ))}
+              <Link to="/login" onClick={() => setMenuOpen(false)} style={{ color: '#3b82f6', fontSize: 15, textDecoration: 'none', fontWeight: 600, padding: '12px 0', borderBottom: '1px solid #f1f5f9' }}>Log in</Link>
+              <Link to="/register" onClick={() => setMenuOpen(false)} className="btn btn-primary" style={{ marginTop: 12, justifyContent: 'center', borderRadius: 10 }}>Get Started Free</Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero ── */}
-      <section style={{ paddingTop: 120, paddingBottom: 80, background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 50%, #fdf4ff 100%)', textAlign: 'center', padding: '120px 5% 80px', position: 'relative', overflow: 'hidden' }}>
-        {/* Decorative blobs */}
+      <section style={{ paddingTop: 80, background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 50%, #fdf4ff 100%)', textAlign: 'center', padding: '120px 5% 80px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -60, right: '10%', width: 300, height: 300, background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -40, left: '5%', width: 250, height: 250, background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-
-
-        <h1 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(40px,6vw,72px)', fontWeight: 900, color: '#0f172a', lineHeight: 1.1, marginBottom: 20, maxWidth: 800, margin: '0 auto 20px' }}>
+        <h1 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(36px,6vw,72px)', fontWeight: 900, color: '#0f172a', lineHeight: 1.1, maxWidth: 800, margin: '0 auto 20px' }}>
           Healthcare That<br />
           <span style={{ background: 'linear-gradient(135deg,#3b82f6,#8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Actually Works For You</span>
         </h1>
 
-        <p style={{ fontSize: 18, color: '#475569', maxWidth: 560, margin: '0 auto 40px', lineHeight: 1.7 }}>
+        <p style={{ fontSize: 'clamp(15px,2.5vw,18px)', color: '#475569', maxWidth: 560, margin: '0 auto 40px', lineHeight: 1.7 }}>
           MediSync Pro bridges the gap between doctors and patients with AI-powered insights, real-time vitals monitoring, and seamless care coordination.
         </p>
 
-        <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 36 }}>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 36 }}>
           <button onClick={() => navigate('/register')} className="btn btn-primary" style={{ padding: '13px 28px', fontSize: 15, borderRadius: 12, boxShadow: '0 6px 20px rgba(59,130,246,0.3)' }}>
             Start for Free <ArrowRight size={18} />
           </button>
@@ -59,7 +85,7 @@ export default function Landing() {
           </button>
         </div>
 
-        <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
           {['HIPAA Compliant', 'AI-Powered Triage', '256-bit Encrypted', 'Role-Based Access'].map(b => (
             <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <CheckCircle size={14} color="#10b981" />
@@ -70,8 +96,7 @@ export default function Landing() {
 
         {/* Preview Cards */}
         <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 60, flexWrap: 'wrap' }}>
-          {/* Doctor Card */}
-          <div style={{ background: '#fff', border: '1px solid #e4eaf5', borderRadius: 20, padding: 24, boxShadow: '0 8px 32px rgba(15,23,42,0.08)', width: 260, textAlign: 'left', animation: 'float 3s ease-in-out infinite' }}>
+          <div style={{ background: '#fff', border: '1px solid #e4eaf5', borderRadius: 20, padding: 24, boxShadow: '0 8px 32px rgba(15,23,42,0.08)', width: 'min(260px, 90vw)', textAlign: 'left', animation: 'float 3s ease-in-out infinite' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
               <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg,#3b82f6,#6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: 14 }}>AS</div>
               <div>
@@ -90,8 +115,7 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Patient Card */}
-          <div style={{ background: '#fff', border: '1px solid #e4eaf5', borderRadius: 20, padding: 24, boxShadow: '0 8px 32px rgba(15,23,42,0.08)', width: 240, textAlign: 'left', animation: 'float 3s ease-in-out infinite 0.5s' }}>
+          <div style={{ background: '#fff', border: '1px solid #e4eaf5', borderRadius: 20, padding: 24, boxShadow: '0 8px 32px rgba(15,23,42,0.08)', width: 'min(240px, 90vw)', textAlign: 'left', animation: 'float 3s ease-in-out infinite 0.5s' }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Live Vitals — Priya M.</div>
             {[
               { name: 'Heart Rate', value: '72 bpm', color: '#ef4444', dot: 'normal' },
@@ -113,12 +137,12 @@ export default function Landing() {
       <section id="features" style={{ padding: '80px 5%', maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div className="badge badge-purple" style={{ marginBottom: 14 }}>Features</div>
-          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(28px,4vw,44px)', fontWeight: 800, color: '#0f172a', marginBottom: 14 }}>Everything care coordination needs</h2>
+          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(26px,4vw,44px)', fontWeight: 800, color: '#0f172a', marginBottom: 14 }}>Everything care coordination needs</h2>
           <p style={{ color: '#475569', fontSize: 16, maxWidth: 480, margin: '0 auto', lineHeight: 1.7 }}>Built for real-world Indian healthcare — fast, intuitive, and powerful.</p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+        <div className="landing-features-grid">
           {features.map((f, i) => (
-            <div key={i} className="card" style={{ padding: 28, transition: 'all 0.2s', cursor: 'default' }}
+            <div key={i} className="card" style={{ padding: 28, cursor: 'default' }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(15,23,42,0.1)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = ''; }}>
               <div style={{ width: 50, height: 50, borderRadius: 14, background: f.bg, color: f.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>{f.icon}</div>
@@ -133,8 +157,8 @@ export default function Landing() {
       <section id="how" style={{ background: '#f8faff', padding: '80px 5%' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
           <div className="badge badge-green" style={{ marginBottom: 14 }}>How It Works</div>
-          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(28px,4vw,40px)', fontWeight: 800, color: '#0f172a', marginBottom: 48 }}>Up and running in minutes</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
+          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(24px,4vw,40px)', fontWeight: 800, color: '#0f172a', marginBottom: 48 }}>Up and running in minutes</h2>
+          <div className="landing-steps-grid">
             {[
               { n: '01', icon: '🎭', title: 'Choose your role', desc: 'Register as a Doctor or Patient. Takes under 2 minutes with our guided setup.' },
               { n: '02', icon: '📅', title: 'Connect & Schedule', desc: 'Patients book appointments instantly. Doctors get organized smart scheduling.' },
@@ -155,9 +179,9 @@ export default function Landing() {
       <section style={{ padding: '80px 5%', maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
           <div className="badge badge-blue" style={{ marginBottom: 14 }}>Two Roles, One Platform</div>
-          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 36, fontWeight: 800, color: '#0f172a' }}>Built for everyone in healthcare</h2>
+          <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, color: '#0f172a' }}>Built for everyone in healthcare</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+        <div className="landing-roles-grid">
           {[
             { role: 'Doctor', icon: <Stethoscope size={28} />, color: '#3b82f6', bg: '#eff6ff', border: '#dbeafe', features: ['Full patient management dashboard', 'AI-powered analytics & reports', 'Smart appointment scheduling', 'Secure patient messaging', 'Critical case alerts'], cta: 'Register as Doctor', link: '/register?role=doctor' },
             { role: 'Patient', icon: <Heart size={28} />, color: '#10b981', bg: '#ecfdf5', border: '#d1fae5', features: ['Personal health dashboard', 'Book & manage appointments', 'AI symptom checker with triage', 'Medication tracker & reminders', 'Emergency SOS with location'], cta: 'Register as Patient', link: '/register?role=patient' },
@@ -183,7 +207,7 @@ export default function Landing() {
 
       {/* ── CTA ── */}
       <section style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)', padding: '70px 5%', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 36, fontWeight: 800, color: '#fff', marginBottom: 14 }}>Ready to transform healthcare?</h2>
+        <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 'clamp(24px,4vw,36px)', fontWeight: 800, color: '#fff', marginBottom: 14 }}>Ready to transform healthcare?</h2>
         <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 16, marginBottom: 32 }}>Join doctors and patients already using MediSync Pro.</p>
         <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
           <button onClick={() => navigate('/register')} style={{ background: '#fff', color: '#3b82f6', padding: '13px 28px', borderRadius: 12, fontWeight: 700, fontSize: 15, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -208,8 +232,23 @@ export default function Landing() {
 
       <style>{`
         @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
-        @media (max-width:900px) { section div[style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr 1fr !important; } }
-        @media (max-width:600px) { section div[style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr !important; } section div[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; } }
+        .landing-features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .landing-steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
+        .landing-roles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .landing-nav-links { display: flex !important; }
+        .landing-hamburger { display: none !important; }
+
+        @media (max-width: 900px) {
+          .landing-features-grid { grid-template-columns: 1fr 1fr; }
+          .landing-steps-grid { grid-template-columns: 1fr 1fr; }
+          .landing-roles-grid { grid-template-columns: 1fr; }
+          .landing-nav-links { display: none !important; }
+          .landing-hamburger { display: flex !important; }
+        }
+        @media (max-width: 600px) {
+          .landing-features-grid { grid-template-columns: 1fr; }
+          .landing-steps-grid { grid-template-columns: 1fr; }
+        }
       `}</style>
     </div>
   );

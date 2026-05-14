@@ -67,7 +67,22 @@ export default function PatientDashboard() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <style>{`
+        .pd-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+        .pd-vitals { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+        .pd-chart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+        @media (max-width: 900px) {
+          .pd-chart-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+          .pd-vitals { grid-template-columns: 1fr 1fr; }
+          .pd-top h2 { font-size: 20px; }
+        }
+        @media (max-width: 420px) {
+          .pd-vitals { grid-template-columns: 1fr; }
+        }
+      `}</style>
+      <div className="pd-top">
         <div>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 26, fontWeight: 800, color: '#0f172a' }}>
             Hello, <span style={{ background: 'linear-gradient(135deg,#10b981,#06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{user?.name?.split(' ')[0] || 'there'}</span> 👋
@@ -116,7 +131,7 @@ export default function PatientDashboard() {
             </button>
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+        <div className="pd-vitals">
           {vitalsData.map(v => (
             <div key={v.label} style={{ background: '#fff', border: '1px solid #e4eaf5', borderRadius: 14, padding: 18, boxShadow: '0 1px 3px rgba(15,23,42,0.05)', transition: 'all 0.2s', cursor: 'default' }}
               onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(15,23,42,0.08)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
@@ -135,7 +150,7 @@ export default function PatientDashboard() {
       </div>
 
       {/* Charts + Meds */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16 }}>
+      <div className="pd-chart-grid">
         {/* Health Trend */}
         <div className="card" style={{ padding: 24 }}>
           <div className="section-title" style={{ marginBottom: 16 }}>

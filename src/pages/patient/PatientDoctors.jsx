@@ -63,6 +63,15 @@ export default function PatientDoctors() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
+      <style>{`
+        .pd-doc-card { padding: 20px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .pd-doc-fee { text-align: center; border-left: 1px solid var(--border); padding-left: 20px; min-width: 120px; }
+        @media (max-width: 640px) {
+          .pd-doc-card { flex-direction: column; align-items: flex-start; gap: 14px; }
+          .pd-doc-fee { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 14px; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+          .pd-doc-fee button { min-width: 120px; }
+        }
+      `}</style>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Find & Book Doctors</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Find the perfect specialist and sync your records instantly.</p>

@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Heart, LayoutDashboard, Calendar, Pill, Activity, AlertOctagon, LogOut, Bell, User, X, MessageSquare, FileText, Search } from 'lucide-react';
+import { Heart, LayoutDashboard, Calendar, Pill, Activity, AlertOctagon, LogOut, Bell, User, X, MessageSquare, FileText, Search, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 const NAV = [
@@ -25,11 +25,17 @@ export default function PatientLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [showNotif, setShowNotif] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const unread = PATIENT_NOTIFS.filter(n => !n.read).length;
+
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <div className="app-layout">
-      <aside className="sidebar">
+      {/* Overlay */}
+      <div className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`} onClick={closeSidebar} />
+
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon" style={{ background: 'linear-gradient(135deg,#10b981,#06b6d4)' }}>
             <Heart size={17} color="#fff" fill="#fff" />
@@ -38,17 +44,22 @@ export default function PatientLayout() {
             <h1 style={{ background: 'linear-gradient(135deg,#10b981,#06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MediSync Pro</h1>
             <span>Patient Portal</span>
           </div>
+          <button onClick={closeSidebar} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', display: 'flex', padding: 4, borderRadius: 6 }}>
+            <X size={16} />
+          </button>
         </div>
 
         <div className="sidebar-nav">
           <div className="sidebar-section">My Health</div>
-          {NAV.map(({ to, label, icon: Icon, end, isEmergency }) => (
+          {NAV.map(({ to, label, icon: Icon, end, isEmergency, badge, badgeClass }) => (
             <NavLink key={to} to={to} end={end}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
-              style={({ isActive }) => isEmergency && !isActive ? { color: '#ef4444' } : {}}>
+              style={({ isActive }) => isEmergency && !isActive ? { color: '#ef4444' } : {}}
+              onClick={closeSidebar}>
               <Icon size={16} />
               {label}
               {isEmergency && <span className="nav-badge urgent">!</span>}
+              {badge && !isEmergency && <span className={`nav-badge ${badgeClass || ''}`}>{badge}</span>}
             </NavLink>
           ))}
         </div>
@@ -71,7 +82,10 @@ export default function PatientLayout() {
       <div className="main-content">
         <div className="topbar">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 10, background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981' }}>
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <Menu size={18} />
+            </button>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981', flexShrink: 0 }}>
               <User size={16} />
             </div>
             <div>
@@ -79,14 +93,14 @@ export default function PatientLayout() {
               <div style={{ fontSize: 11, color: '#94a3b8' }}>Saturday, April 04, 2026</div>
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ position: 'relative' }}>
               <button className="btn btn-ghost btn-icon" style={{ position: 'relative' }} onClick={() => setShowNotif(p => !p)}>
                 <Bell size={17} />
                 {unread > 0 && <span className="notif-dot" />}
               </button>
               {showNotif && (
-                <div style={{ position: 'absolute', right: 0, top: 48, width: 300, background: '#fff', border: '1px solid #e4eaf5', borderRadius: 16, boxShadow: '0 8px 32px rgba(15,23,42,0.12)', zIndex: 300, overflow: 'hidden' }}>
+                <div style={{ position: 'fixed', right: 10, top: 60, width: 'min(300px, calc(100vw - 20px))', background: '#fff', border: '1px solid #e4eaf5', borderRadius: 16, boxShadow: '0 8px 32px rgba(15,23,42,0.12)', zIndex: 300, overflow: 'hidden' }}>
                   <div style={{ padding: '14px 16px', borderBottom: '1px solid #e4eaf5', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>Notifications</span>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

@@ -90,6 +90,15 @@ export default function PatientSymptoms() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
+      <style>{`
+        .ps-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .ps-results-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 16px; margin-bottom: 20px; align-items: stretch; }
+        .ps-action-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) {
+          .ps-options-grid { grid-template-columns: 1fr; }
+          .ps-results-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>AI Symptom Checker</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Select your symptoms for a Gemini AI-powered health triage</p>
@@ -120,7 +129,7 @@ export default function PatientSymptoms() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+          <div className="ps-options-grid">
             <div className="card" style={{ padding: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 }}>Duration</div>
               {['today', 'few days', 'a week', 'over a week'].map(d => (
@@ -176,7 +185,7 @@ export default function PatientSymptoms() {
             )}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16, marginBottom: 20, alignItems: 'stretch' }}>
+          <div className="ps-results-grid">
             {/* Insights */}
             <div className="card" style={{ padding: 24 }}>
               <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -216,7 +225,7 @@ export default function PatientSymptoms() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="ps-action-grid">
             <button className="btn btn-ghost" onClick={reset} style={{ justifyContent: 'center', padding: 13 }}>← Check Again</button>
             <button className="btn btn-primary" onClick={() => navigate('/patient/appointments')} style={{ justifyContent: 'center', padding: 13 }}>
               <ChevronRight size={16} /> Book Appointment

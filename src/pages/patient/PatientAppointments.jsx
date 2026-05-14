@@ -10,7 +10,18 @@ export default function PatientAppointments() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <style>{`
+        .pa-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 10px; }
+        .pa-appt-card { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); transition: var(--transition); flex-wrap: wrap; }
+        .pa-appt-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; margin-left: auto; }
+        .pa-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 640px) {
+          .pa-appt-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+          .pa-appt-actions { margin-left: 0; flex-direction: row; align-items: center; width: 100%; }
+          .pa-modal-grid { grid-template-columns: 1fr; }
+        }
+      `}</style>
+      <div className="pa-header">
         <div>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text-primary)' }}>My Appointments</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Upcoming & past consultations</p>

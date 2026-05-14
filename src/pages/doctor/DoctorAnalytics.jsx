@@ -42,6 +42,18 @@ export default function DoctorAnalytics() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
+      <style>{`
+        .ana-kpi { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+        .ana-chart-row { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .ana-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 1100px) { .ana-kpi { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 900px) {
+          .ana-chart-row { grid-template-columns: 1fr; }
+          .ana-two-col { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) { .ana-kpi { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 420px) { .ana-kpi { grid-template-columns: 1fr; } }
+      `}</style>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Analytics & Management</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Comprehensive overview of patients, outbreaks, and hospital operations</p>
@@ -62,7 +74,7 @@ export default function DoctorAnalytics() {
       {tab === 'patient' && (
         <div className="animate-fadeIn">
           {/* KPI Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
+          <div className="ana-kpi">
             {[
               { label: 'This Week', value: '68', sub: 'patients seen', color: 'var(--blue)' },
               { label: 'Est Revenue', value: '₹55.4k', sub: 'Calculated this week', color: 'var(--green)' },
@@ -77,7 +89,7 @@ export default function DoctorAnalytics() {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 20, marginBottom: 20 }}>
+          <div className="ana-chart-row">
             <div className="card" style={{ padding: 24 }}>
               <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 20 }}>Weekly Patients & Generated Revenue</h3>
               <ResponsiveContainer width="100%" height={220}>
@@ -134,7 +146,7 @@ export default function DoctorAnalytics() {
       )}
 
       {tab === 'disease' && (
-        <div className="animate-fadeIn" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div className="animate-fadeIn ana-two-col">
           <div className="card" style={{ padding: 24, gridColumn: '1 / -1' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
               <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700 }}>Epidemiology Timeline: Viral Outbreaks</h3>
@@ -194,7 +206,7 @@ export default function DoctorAnalytics() {
       )}
 
       {tab === 'hospital' && (
-        <div className="animate-fadeIn" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <div className="animate-fadeIn ana-two-col">
           {/* Inventory Module */}
           <div className="card" style={{ padding: 24 }}>
             <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700, marginBottom: 20 }}>Live Inventory (Wards)</h3>

@@ -10,6 +10,14 @@ export default function PatientMedications() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
+      <style>{`
+        .pm-banner { background: linear-gradient(135deg, rgba(0,230,118,0.08) 0%, rgba(29,233,182,0.05) 100%); border: 1px solid rgba(0,230,118,0.2); border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .pm-med-card { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: var(--radius-md); transition: var(--transition); flex-wrap: wrap; }
+        @media (max-width: 640px) {
+          .pm-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+          .pm-med-name { flex-wrap: wrap; }
+        }
+      `}</style>
       <div style={{ marginBottom: 24 }}>
         <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Medications</h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Track your daily medication schedule</p>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Heart, Eye, EyeOff, ArrowLeft, Stethoscope, User, CheckCircle } from 'lucide-react';
+import { Heart, Eye, EyeOff, ArrowLeft, Stethoscope, User } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,16 +25,12 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    setError('');
-    setLoading(true);
+    setError(''); setLoading(true);
     try {
       const user = await loginWithGoogle();
       navigate(user.role === 'doctor' ? '/doctor' : '/patient', { replace: true });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { setError(err.message); }
+    finally { setLoading(false); }
   };
 
   const quickLogin = async (role) => {
@@ -49,8 +45,8 @@ export default function Login() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', fontFamily: 'Inter,sans-serif' }}>
-      {/* Left Panel */}
-      <div style={{ flex: 1, background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 60, position: 'relative', overflow: 'hidden' }}>
+      {/* Left Panel – hidden on mobile */}
+      <div className="login-left-panel" style={{ flex: 1, background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 60, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -80, right: -80, width: 320, height: 320, background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: -60, left: -60, width: 260, height: 260, background: 'radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 400, position: 'relative', zIndex: 1 }}>
@@ -81,10 +77,18 @@ export default function Login() {
       </div>
 
       {/* Right Panel */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 32px', background: '#fff', position: 'relative' }}>
-        <Link to="/" style={{ position: 'absolute', top: 24, left: 28, display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 24px', background: '#fff', position: 'relative', overflowY: 'auto' }}>
+        <Link to="/" style={{ position: 'absolute', top: 20, left: 20, display: 'flex', alignItems: 'center', gap: 6, color: '#94a3b8', fontSize: 13, textDecoration: 'none', fontWeight: 500 }}>
           <ArrowLeft size={15} /> Back
         </Link>
+
+        {/* Mobile logo */}
+        <div className="login-mobile-logo" style={{ display: 'none', alignItems: 'center', gap: 8, marginBottom: 28, marginTop: 20 }}>
+          <div style={{ width: 32, height: 32, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Heart size={16} color="#fff" fill="#fff" />
+          </div>
+          <span style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 800, background: 'linear-gradient(135deg,#3b82f6,#6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MediSync Pro</span>
+        </div>
 
         <div style={{ width: '100%', maxWidth: 420 }}>
           <div style={{ marginBottom: 28 }}>
@@ -101,7 +105,7 @@ export default function Login() {
                 { role: 'patient', icon: <User size={16} color="#10b981" />, name: 'Patient Demo', sub: 'Priya Mehta', color: '#10b981', bg: '#ecfdf5', border: '#d1fae5' },
               ].map(d => (
                 <button key={d.role} onClick={() => quickLogin(d.role)} disabled={loading}
-                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: d.bg, border: `1px solid ${d.border}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', opacity: loading ? 0.6 : 1 }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 14px', background: d.bg, border: `1px solid ${d.border}`, borderRadius: 12, cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', opacity: loading ? 0.6 : 1, width: '100%' }}
                   onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(15,23,42,0.08)'}
                   onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
                   {d.icon}
@@ -114,8 +118,11 @@ export default function Login() {
             </div>
           </div>
 
-          <button onClick={handleGoogleLogin} disabled={loading} style={{ width: '100%', padding: '12px', background: '#fff', border: '1px solid #e4eaf5', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', transition: 'all 0.2s', fontWeight: 600, fontSize: 14, color: '#0f172a', marginBottom: 22, boxShadow: '0 1px 2px rgba(15,23,42,0.05)' }} onMouseEnter={e => e.currentTarget.style.background = '#f8faff'} onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <button onClick={handleGoogleLogin} disabled={loading}
+            style={{ width: '100%', padding: '12px', background: '#fff', border: '1px solid #e4eaf5', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', transition: 'all 0.2s', fontWeight: 600, fontSize: 14, color: '#0f172a', marginBottom: 22, boxShadow: '0 1px 2px rgba(15,23,42,0.05)' }}
+            onMouseEnter={e => e.currentTarget.style.background = '#f8faff'}
+            onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -131,9 +138,7 @@ export default function Login() {
           </div>
 
           {error && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: 10, padding: '10px 14px', color: '#b91c1c', fontSize: 13, marginBottom: 16 }}>
-              {error}
-            </div>
+            <div style={{ background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: 10, padding: '10px 14px', color: '#b91c1c', fontSize: 13, marginBottom: 16 }}>{error}</div>
           )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -160,6 +165,13 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .login-left-panel { display: none !important; }
+          .login-mobile-logo { display: flex !important; }
+        }
+      `}</style>
     </div>
   );
 }

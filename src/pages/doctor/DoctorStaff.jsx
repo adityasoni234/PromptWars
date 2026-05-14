@@ -15,7 +15,15 @@ export default function DoctorStaff() {
 
   return (
     <div className="page-wrapper animate-fadeIn">
-      <div style={{ marginBottom: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <style>{`
+        .ds-header { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .ds-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        @media (max-width: 640px) {
+          .ds-search { width: 100% !important; }
+          .ds-shift-col { display: none; }
+        }
+      `}</style>
+      <div className="ds-header">
         <div>
           <h2 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 24, fontWeight: 800, color: 'var(--text)' }}>Staff Management</h2>
           <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>Track team availability, shifts, and leaves</p>
@@ -24,7 +32,7 @@ export default function DoctorStaff() {
       </div>
 
       <div className="card" style={{ padding: 24 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <div className="ds-card-header">
           <h3 style={{ fontFamily: 'Outfit,sans-serif', fontSize: 16, fontWeight: 700 }}>Hospital Staff Directory</h3>
           <div className="search-wrap" style={{ width: 250 }}>
             <Search size={14} />
